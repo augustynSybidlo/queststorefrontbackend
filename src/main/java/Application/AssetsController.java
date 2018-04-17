@@ -39,7 +39,7 @@ public class AssetsController implements HttpHandler {
 
     }
 
-    static byte[] readFile(String path)
+    private static byte[] readFile(String path)
             throws IOException
     {
         return Files.readAllBytes(Paths.get(path));
