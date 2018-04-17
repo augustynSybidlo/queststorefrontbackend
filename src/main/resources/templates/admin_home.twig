@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+</head>
+<body>
+<div class="content">
+    <div class="entries">
+        <h2>GuestBook</h2>
+    </div>
+    <table>
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </table>
+    <form method="POST">
+        <table id="form">
+            <tr><td><input type="text" placeholder="message" name="message" required></td></tr>
+            <tr><td><input type="text" placeholder="name" name="name" required></td></tr>
+            <tr><td><input type="submit" value="Add"></td></tr>
+        </table>
+    </form>
+    <footer>&copy;Codecool S.S</footer>
+</div>
+</body>
+</html>
