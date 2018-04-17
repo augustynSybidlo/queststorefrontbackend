@@ -424,9 +424,10 @@
     input[type=text], .login, .password {
         font-family: 'Press Start 2P', cursive;
         font-size: 50px;
-        color: rgba(0,0,0,0.1);
+        color: gold;
         background-color: unset;
         background-repeat: no-repeat;
+        bac
         outline: none;
         width: 100%;
         padding: 35px;
@@ -434,23 +435,36 @@
         cursor: url("../img/keybord.png"), auto;
     }
 
-    .login:hover {
-        background-image: none;
+    ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+        color: goldenrod;
+    }
+    ::-moz-placeholder { /* Firefox 19+ */
+        color: goldenrod;
+    }
+    :-ms-input-placeholder { /* IE 10+ */
+        color: goldenrod;
+    }
+    :-moz-placeholder { /* Firefox 18- */
+        color: goldenrod;
     }
 
-    .password:hover {
-        background-image: none;
-    }
+    /*.login:hover {*/
+        /*background-image: none;*/
+    /*}*/
 
-    .login {
-        background-image: url(../img/login_2.png);
-        background-position: center;
-    }
+    /*.password:hover {*/
+        /*background-image: none;*/
+    /*}*/
 
-    .password {
-        background-image: url(../img/password_2.png);
-        background-position: center;
-    }
+    /*.login {*/
+        /*background-image: url(../img/login_2.png);*/
+        /*background-position: center;*/
+    /*}*/
+
+    /*.password {*/
+        /*background-image: url(../img/password_2.png);*/
+        /*background-position: center;*/
+    /*}*/
 
     .submit-login {
         width: 40%;
