@@ -15,14 +15,22 @@ import org.jtwig.JtwigTemplate;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
+import java.net.HttpCookie;
+import java.util.*;
 
 public class LoginController implements HttpHandler {
+
+    private List<String> logins = Arrays.asList("admin");
+    private List<String> passwords = Arrays.asList("admin");
+    private Map<String,String> sessions = new HashMap<String, String>();
+    private int counter = 0;
+
     private LoginView view = new LoginView();
     private UsersDao usersDao = new UsersDaoImpl();
     private ArrayList<User> usersCollection = usersDao.getUsersCollection();
 
     public void login() {
+
         boolean isLoginSession = true;
 
         while (isLoginSession) {
@@ -36,7 +44,6 @@ public class LoginController implements HttpHandler {
             }
         }
     }
-
     private boolean checkIfUserExists(String login) {
         for (User user : usersCollection) {
             if (login.equals(user.getLogin())) {
@@ -112,19 +119,13 @@ public class LoginController implements HttpHandler {
 
             if (method.equals("GET")) {
 
-                // client's address
                 String userAgent = httpExchange.getRequestHeaders().getFirst("User-agent");
-
-                // get a template file
                 JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.html");
-
-                // create a model that will be passed to a template
                 JtwigModel model = JtwigModel.newModel();
-
-                // render a template to a string
                 response = template.render(model);
 
-                // send the results to a the client
+                String sessionID = getCookie("sessionID", httpExchange);
+
 
 
             }
@@ -136,6 +137,32 @@ public class LoginController implements HttpHandler {
         }catch (Exception e){
             e.printStackTrace();
         }
+
+    }
+
+    public String getCookie(String nameCookie, HttpExchange httpExchange) {
+
+        String cookieHeader = httpExchange.getRequestHeaders().getFirst("Cookie");
+        System.out.println("cookieHeader: " + cookieHeader);
+
+        if (cookieHeader == null) {
+            return null;
+        }
+
+        String[] split = cookieHeader.split(";");
+        for (String cookieString : split) {
+            HttpCookie cookie = HttpCookie.parse(cookieString).get(0);
+            if (cookie.getName().equals(nameCookie)) {
+                return cookie.getValue();
+            }
+
+        }
+        return null;
+    }
+
+    public void setCookie(String name, String value, HttpExchange httpExchange) {
+        HttpCookie cookie = new HttpCookie(name, value); // This isn't a good way to create sessionId. Find out better!
+        httpExchange.getResponseHeaders().add("Set-Cookie", cookie.toString());
 
     }
 }
