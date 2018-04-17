@@ -7,10 +7,14 @@ import Models.Mentor;
 import Models.Student;
 import Models.User;
 import Views.LoginView;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
-public class LoginController {
+public class LoginController implements HttpHandler {
     private LoginView view = new LoginView();
     private UsersDao usersDao = new UsersDaoImpl();
     private ArrayList<User> usersCollection = usersDao.getUsersCollection();
@@ -94,5 +98,23 @@ public class LoginController {
             StudentController controller = new StudentController();
             controller.startStudentPanel(user);
         }
+    }
+
+    @Override
+    public void handle(HttpExchange httpExchange) throws IOException {
+        String response = "";
+        String method = httpExchange.getRequestMethod();
+
+        if (method.equals("GET")) {
+            response = "<html><body><h1>yo ziom</h1>" +
+                    "</body></html>";
+            System.out.println(response);
+        }
+
+
+        httpExchange.sendResponseHeaders(200, response.length());
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(response.getBytes());
+        os.close();
     }
 }
