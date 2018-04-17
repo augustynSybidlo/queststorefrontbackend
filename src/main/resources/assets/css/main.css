@@ -13,7 +13,7 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
-    cursor: url("../../img/keybord.png"), auto;
+    cursor: url("../img/keybord.png"), auto;
     margin: 0;
     padding: 0;
     border: 0;
@@ -53,7 +53,7 @@ table {
 
 body {
     line-height: 1;
-    background: url("../../img/background.png");
+    background: url("../img/background.png");
     background-size: auto;
 }
 
@@ -108,7 +108,7 @@ input[type=text], .login, .password, .new-name, .new-surname, .new-password {
     width: 100%;
     padding: 35px;
     box-sizing: border-box;
-    cursor: url("../../img/keybord.png"), auto;
+    cursor: url("../img/keybord.png"), auto;
 }
 
 .button {
@@ -129,32 +129,32 @@ input[type=text], .login, .password, .new-name, .new-surname, .new-password {
 /* Graphics */
 
 .login {
-    background-image: url(../../img/login_2.png);
+    background-image: url(../img/login_2.png);
     background-position: center;
 }
 
 .password {
-    background-image: url(../../img/password_2.png);
+    background-image: url(../img/password_2.png);
     background-position: center;
 }
 
 .new-name {
-    background-image: url(../../img/name.png);
+    background-image: url(../img/name.png);
     background-position: center;
 }
 
 .new-surname {
-    background-image: url(../../img/surname.png);
+    background-image: url(../img/surname.png);
     background-position: center;
 }
 
 .new-password {
-    background-image: url(../../img/password_button.png);
+    background-image: url(../img/password_button.png);
     background-position: center;
 }
 
 .submit-login {
-    cursor: url("../../img/keybord.png"), auto;
+    cursor: url("../img/keybord.png"), auto;
     width: 40%;
 }
 
