@@ -22,15 +22,11 @@ public class AssetsController implements HttpHandler {
 
             String requestPath = httpExchange.getRequestURI().getPath();
 
-//            File homedir = new File(System.getProperty("user.dir"));
-//            File filePath = new File(homedir, "/src/main//resource/" + requestPath);
-//            System.out.println(filePath.toString());
-//
-//            byte[] response = readFile(filePath.toString());
+            File homedir = new File(System.getProperty("user.dir"));
+            System.out.println("homedir: " + homedir);
+            File filePath = new File(homedir, "/src/main/resources/" + requestPath);
 
-            // z ta sciezka dziala
-            byte[] response = readFile("/home/wiola/codecool/HTML_CSS/queststorefrontbackend/src/main/resources/" + requestPath);
-            System.out.println(requestPath);
+            byte[] response = readFile(filePath.toString());
 
             httpExchange.sendResponseHeaders(200, response.length);
 
