@@ -1,12 +1,12 @@
 package Application;
 
-import Controllers.AdminController;
 import Controllers.LoginController;
 import com.sun.net.httpserver.HttpServer;
-
 import java.net.InetSocketAddress;
 
-public class Application{
+import Handlers.AdminHandler;
+
+    public class Application {
 
     public static void main (String[] argv) throws Exception{
 
@@ -14,7 +14,7 @@ public class Application{
 
         server.createContext("/login", new LoginController());
         server.createContext("/assets", new AssetsController());
-        server.createContext("/admin", new AdminController());
+        server.createContext("/adminhome", new AdminHandler());
         server.setExecutor(null);
         server.start();
     }

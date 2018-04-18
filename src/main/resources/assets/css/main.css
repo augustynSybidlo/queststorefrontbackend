@@ -111,6 +111,12 @@ input[type=text], .login, .password, .new-name, .new-surname, .new-password {
     cursor: url("../img/keybord.png"), auto;
 }
 
+p {
+    color: goldenrod;
+    font-family: "Press Start 2P", cursive;
+    font-size: large;
+}
+
 ::-moz-placeholder {
     color: goldenrod;
 }
