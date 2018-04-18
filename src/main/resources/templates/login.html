@@ -24,11 +24,11 @@
     </div>
 </header>
 
-<form method="post">
-        <input class="login" type="text" name="login" placeholder="login"><br>
-        <input class="password" type="password" name="password" placeholder="password"><br>
-        <input class="submit-login" type="image" src="assets/img/submit.png">
+<form method="POST">
+    <input type="hidden" name="action" value="login">
+    <input class="login" type="text" name="login" placeholder="login"><br>
+    <input class="password" type="password" name="password" placeholder="password"><br>
+    <input class="submit-login" type="image" value="PLAY" src="assets/img/submit.png" onclick="play()">
 </form>
-
 </body>
 </html>

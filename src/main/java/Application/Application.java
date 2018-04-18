@@ -10,22 +10,16 @@ public class Application{
 
     public static void main (String[] argv) throws Exception{
 
-        HttpServer server = HttpServer.create(new InetSocketAddress(8888), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
         server.createContext("/login", new LoginController());
         server.createContext("/assets", new AssetsController());
         server.createContext("/admin", new AdminController());
         server.setExecutor(null);
-
-
         server.start();
     }
-//        Application app = new Application();
-//        app.startApp();
-//    }
-//
-//    private void startApp(){
-//        LoginController loginProcedure = new LoginController();
-//        loginProcedure.login();
-//    }
+
+
+
+
 }
