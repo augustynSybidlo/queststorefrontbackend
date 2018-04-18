@@ -36,6 +36,10 @@ public class AdminHandler implements HttpHandler {
 
             response = parseAddMentorMenu(httpExchange);
 
+            if (method.equals("POST")){
+                response = saveAddedMentorAndGoBackToMenu(httpExchange);
+            }
+
 //            if (response.isEmpty()){
 //                /* redirect to index*/
 //                Headers responseHeaders = httpExchange.getResponseHeaders();
@@ -49,6 +53,7 @@ public class AdminHandler implements HttpHandler {
 
             response = template.render(model);
         }
+
         byte[] bytes = response.getBytes("UTF-8");
         httpExchange.sendResponseHeaders(200, bytes.length);
         OutputStream os = httpExchange.getResponseBody();
@@ -64,30 +69,34 @@ public class AdminHandler implements HttpHandler {
 
         if (method.equals("GET")) {
 
+            System.out.println("DZIAŁA");
             JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/add_mentor.twig");
             JtwigModel model = JtwigModel.newModel()/*.with("fiels", fieldCollection) podobnie jak index*/;
 
             response = template.render(model);
         }
+        return response;
+    }
 
-        if (method.equals("POST")) {
+    public String saveAddedMentorAndGoBackToMenu(HttpExchange httpExchange) throws IOException {
+        String response = "";
 
-            /* read form data*/
-            InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
-            BufferedReader br = new BufferedReader(isr);
-            String formData = br.readLine();
+        /* read form data*/
+        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String formData = br.readLine();
 
-            /* parse key=value&another_key=another_value and escaped unicode codepoints into usable form */
-            Map<String, String> inputData = parseFormData(formData);
+        /* parse key=value&another_key=another_value and escaped unicode codepoints into usable form */
+        Map<String, String> inputData = parseFormData(formData);
+        System.out.println(inputData.get("name"));
+        Mentor newMentor = new Mentor(inputData.get("name"), inputData.get("surname"), inputData.get("password"));
 
-            Mentor newMentor = new Mentor(inputData.get("name"), inputData.get("surname"), inputData.get("password"));
-
-            try {
-                adminController.getDao().addUserToDatabase(newMentor);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+        try {
+            adminController.getDao().addUserToDatabase(newMentor);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
         return response;
     }
 
