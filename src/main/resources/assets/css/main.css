@@ -101,7 +101,7 @@ input[type=password].new-password {
 input[type=text], .login, .password, .new-name, .new-surname, .new-password {
     font-family: 'Press Start 2P', cursive;
     font-size: 50px;
-    color: rgba(0,0,0,0.1);
+    color: gold;
     background-color: unset;
     background-repeat: no-repeat;
     outline: none;
@@ -109,6 +109,18 @@ input[type=text], .login, .password, .new-name, .new-surname, .new-password {
     padding: 35px;
     box-sizing: border-box;
     cursor: url("../img/keybord.png"), auto;
+}
+
+::-moz-placeholder {
+    color: goldenrod;
+}
+
+::-webkit-input-placeholder {
+    color: goldenrod;
+}
+
+:-ms-input-placeholder {
+    color: goldenrod;
 }
 
 .button {
@@ -128,15 +140,15 @@ input[type=text], .login, .password, .new-name, .new-surname, .new-password {
 
 /* Graphics */
 
-.login {
-    background-image: url(../img/login_2.png);
-    background-position: center;
-}
+/*.login {*/
+    /*background-image: url(../img/login_2.png);*/
+    /*background-position: center;*/
+/*}*/
 
-.password {
-    background-image: url(../img/password_2.png);
-    background-position: center;
-}
+/*.password {*/
+    /*background-image: url(../img/password_2.png);*/
+    /*background-position: center;*/
+/*}*/
 
 .new-name {
     background-image: url(../img/name.png);

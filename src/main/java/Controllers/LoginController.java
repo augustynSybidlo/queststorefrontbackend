@@ -7,6 +7,7 @@ import Models.Mentor;
 import Models.Student;
 import Models.User;
 import Views.LoginView;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -35,19 +36,18 @@ public class LoginController implements HttpHandler {
     private UsersDao usersDao = new UsersDaoImpl();
     private ArrayList<User> usersCollection = usersDao.getUsersCollection();
 
-    public void login(String login, String password) {
-        boolean isLoginSession = true;
+    public boolean login(String login, String password, HttpExchange httpExchange) {
+        boolean isValid = false;
 
-        while (isLoginSession) {
-            view.clearScreen();
-            String userLogin = login;
-            String userPassword = password;
-            String userStatus = getUserStatus(userLogin, userPassword);
-            if (checkIfUserExists(userLogin) && checkUserPassword(userLogin, userPassword)) {
-                runProperUserPanel(userLogin, userPassword, userStatus);
-                isLoginSession = false;
-            }
+        view.clearScreen();
+        String userLogin = login;
+        String userPassword = password;
+        String userStatus = getUserStatus(userLogin, userPassword);
+        if (checkIfUserExists(userLogin) && checkUserPassword(userLogin, userPassword)) {
+            runProperUserPanel(userLogin, userPassword, userStatus, httpExchange);
+            isValid = true;
         }
+        return isValid;
     }
 
     private boolean checkIfUserExists(String login) {
@@ -98,19 +98,17 @@ public class LoginController implements HttpHandler {
         return null;
     }
 
-    private void runProperUserPanel(String userLogin, String userPassword, String userStatus) {
+    private void runProperUserPanel(String userLogin, String userPassword, String userStatus, HttpExchange httpExchange) {
         if(userStatus.equals("admin")) {
-//            User user = new Admin(userLogin, userPassword, userStatus);
-            AdminController controller = new AdminController();
-            controller.startAdminPanel();
-        } else if (userStatus.equals("mentor")) {
-            User user = new Mentor(userLogin, userPassword, userStatus);
-            MentorController controller = new MentorController();
-            controller.startMentorPanel();
-        } else if (userStatus.equals("student")) {
-            Student user = (Student) getUserAccount(userLogin, userPassword);
-            StudentController controller = new StudentController();
-            controller.startStudentPanel(user);
+            redirectTo(httpExchange, "/admin");
+//        } else if (userStatus.equals("mentor")) {
+//            User user = new Mentor(userLogin, userPassword, userStatus);
+//            MentorController controller = new MentorController();
+//            controller.startMentorPanel();
+//        } else if (userStatus.equals("student")) {
+//            Student user = (Student) getUserAccount(userLogin, userPassword);
+//            StudentController controller = new StudentController();
+//            controller.startStudentPanel(user);
         }
     }
 
@@ -127,7 +125,7 @@ public class LoginController implements HttpHandler {
 
             String sessionID = getCookie("sessionID", httpExchange);
 
-            if (sessionID == null || sessionID.equals("\"\"")) {
+            if (sessionID == "0" || sessionID.equals("\"\"")) {
                 JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.html");
                 JtwigModel model = JtwigModel.newModel();
                 response = template.render(model);
@@ -135,15 +133,11 @@ public class LoginController implements HttpHandler {
                 String login = sessions.get(sessionID);
 
                 if (login == null) {
-                    System.out.println("Not valid session. Please log in again:");
                     JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.html");
                     JtwigModel model = JtwigModel.newModel();
+//                    model.with("validationInfo", "Not valid session. Please log in again!");
                     response = template.render(model);
                 }
-                //napisac warunek do wyboru uzytkownika i podpiac jtwigi
-//                    else{
-//                        text_response = createHelloText(counter, login);
-//                    }
             }
         }
 
@@ -153,90 +147,57 @@ public class LoginController implements HttpHandler {
             BufferedReader br = new BufferedReader(isr);
             String formData = br.readLine();
 
-            System.out.println(formData);
-            Map inputs = parseFormData(formData);
+            Map<String, String> inputs = parseFormData(formData);
+            System.out.println(inputs.toString());
+            boolean isLoginCorrect = login(inputs.get("login"), inputs.get("password"), httpExchange);
+            System.out.println(inputs.get("login"));
+            System.out.println(inputs.get("password"));
 
-            if (inputs.get("action").equals("login")) {
+            if (isLoginCorrect) {
 
-                String login = (String) inputs.get("login");
-                System.out.println(login);
+                String sessionID = String.valueOf(counter++);
+                setCookie("sessionID", sessionID, httpExchange);
+                sessions.put(sessionID, inputs.get("login"));
+                //for tests
+//                        response = "zalogowalo sie!!!";
+                System.out.println(String.valueOf(counter));
 
-                if (logins.contains(login)) {
-                    int indexPassword = logins.indexOf(login);
-                    boolean isPasswordCorrect = passwords.get(indexPassword).equals(inputs.get("password"));
-
-                    if (isPasswordCorrect) {
-                        String sessionID = String.valueOf(counter++);
-                        setCookie("sessionID", sessionID, httpExchange);
-                        sessions.put(sessionID, login);
-                        //for tests
-                        response = "zalogowalo sie!!!";
-                        System.out.println(String.valueOf(counter));
-
-                        // wielki if w zaleznosci od uzytkownika odpoala sie jtwig z odpowiednim menu
+                // wielki if w zaleznosci od uzytkownika odpoala sie jtwig z odpowiednim menu
 //                            text_response = createHelloText(counter, login);
 
-                    } else {
-                        //for tests
-                        response = "Password incorrect. Please log in again.";
-                        System.out.println(response);
-
-                        JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.html");
-                        JtwigModel model = JtwigModel.newModel();
-                        response = template.render(model);
-                    }
                 } else {
-                    //for tests
-                    response = "Not recognized user. Please log in again.";
-                    System.out.println(response);
+//                        //for tests
+//                        response = "Password incorrect. Please log in again.";
+//                        System.out.println(response);
+
                     JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.html");
                     JtwigModel model = JtwigModel.newModel();
+                    model.with("validationInfo", "Password incorrect. Please log in again!");
                     response = template.render(model);
                 }
-            } else {
-                // logout
-                String sessionID = getCookie("sessionID", httpExchange);
-                if (sessionID != null) {
-                    sessions.remove(sessionID);
-                    System.out.println("You have been successfully logged out.");
-                    JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.html");
-                    JtwigModel model = JtwigModel.newModel();
-                    response = template.render(model);
-                    deleteCookie("sessionID", httpExchange);
-                }
-                // get a template file
-                JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.html");
-
-                // create a model that will be passed to a template
-                JtwigModel model = JtwigModel.newModel();
-
-                // render a template to a string
-                response = template.render(model);
-
-                // send the results to a the client
             }
-
-            if(method.equals("POST")){
-                InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
-                BufferedReader br = new BufferedReader(isr);
-                String formData = br.readLine();
-
-                System.out.println(formData);
-                Map<String, String> inputs = parseFormData(formData);
-                System.out.println(inputs.toString());
-                login(inputs.get("login"), inputs.get("password"));
-            }
-
-            httpExchange.sendResponseHeaders(200, response.length());
-            OutputStream os = httpExchange.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-        }
+//                } else {
+//                    //for tests
+////                    response = "Not recognized user. Please log in again.";
+////                    System.out.println(response);
+//                    JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.html");
+//                    JtwigModel model = JtwigModel.newModel();
+//                    model.with("validationInfo", "Not recognized user. Please log in again!");
+//                    response = template.render(model);
+//                }
+//            } else {
+//                // logout
+//                String sessionID = getCookie("sessionID", httpExchange);
+//                if (sessionID != null) {
+//                    sessions.remove(sessionID);
+//                    System.out.println("You have been successfully logged out.");
+//                    JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.html");
+//                    JtwigModel model = JtwigModel.newModel();
+//                    response = template.render(model);
+//                    deleteCookie("sessionID", httpExchange);
+//                }
+//            }
+//        }
         httpExchange.sendResponseHeaders(200, response.length());
         OutputStream os = httpExchange.getResponseBody();
         os.write(response.getBytes());
@@ -287,4 +248,16 @@ public class LoginController implements HttpHandler {
         }
         return map;
     }
+
+    private void redirectTo(HttpExchange httpExchange, String destination) {
+        try {
+            Headers responseHeaders = httpExchange.getResponseHeaders();
+            responseHeaders.add("Location", destination);
+            httpExchange.sendResponseHeaders(302, -1);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }

@@ -228,7 +228,7 @@ public class AdminController implements HttpHandler {
                 String userAgent = httpExchange.getRequestHeaders().getFirst("User-agent");
 
                 // get a template file
-                JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin.html");
+                JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin_home.twig");
 
                 // create a model that will be passed to a template
                 JtwigModel model = JtwigModel.newModel();
