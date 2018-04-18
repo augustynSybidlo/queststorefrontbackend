@@ -1,0 +1,70 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Add new mentor</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="/assets/css/normalize.css">
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+<!--[if lte IE 9]>
+<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+<![endif]-->
+<audio autoplay>
+    <source src="audio/Mario-coin-sound.mp3">
+</audio>
+<!-- Add your site or application content here -->
+<header>
+    <div>
+        <a class="exit" href="admin_home.html"><img src="img/exit.png"></a>
+    </div>
+    <div class="headermain">
+        <a href="index.html"><img src="img/header_main.png" alt="Codecool system"></a>
+    </div>
+</header>
+<body>
+<div>
+    <form class="add-mentor-form">
+        <input class="new-name" type="text" name="name"><br>
+        <input class="new-surname" type="text" name="surname"><br>
+        <input class="new-password" type="password" name="password"><br>
+        <input class="submit-login" type="image" value="PLAY" src="/assets/img/submit.png" onclick="play()">
+    </form>
+</div>
+<footer>
+    <div class="footer">
+        <img src="/assets/img/devteams.png">
+        <img src="/assets/img/year.png">
+    </div>
+</footer>
+
+<script src="js/vendor/modernizr-3.5.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+<script>window.jQuery || document.write('<script src="js/vendor/jquery-3.2.1.min.js"><\/script>')</script>
+<script src="js/plugins.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+    function play(){
+        var audio = document.getElementsByTagName("audio")[0];
+        audio.play();}
+</script>
+
+<!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
+<script>
+    window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
+    ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
+</script>
+<script src="https://www.google-analytics.com/analytics.js" async defer></script>
+</body>
+</html>
