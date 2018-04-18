@@ -21,7 +21,7 @@ import java.net.InetSocketAddress;
 
             // set routes
 //        server.createContext("/", new StudentHandler());
-            server.createContext("/adminhome", new AdminHandler());
+            server.createContext("/adminhome/", new AdminHandler());
             server.createContext("/assets", new AssetsController());
             server.setExecutor(null); // creates a default executor
 
