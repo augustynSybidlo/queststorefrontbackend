@@ -2,8 +2,6 @@ package Controllers;
 
 import DAOs.UsersDao;
 import DAOs.UsersDaoImpl;
-import Models.Admin;
-import Models.Mentor;
 import Models.Student;
 import Models.User;
 import Views.LoginView;
@@ -19,8 +17,6 @@ import java.io.*;
 import java.net.HttpCookie;
 import java.net.URLDecoder;
 import java.util.*;
-import java.io.*;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -125,7 +121,7 @@ public class LoginController implements HttpHandler {
 
             String sessionID = getCookie("sessionID", httpExchange);
 
-            if (sessionID == "0" || sessionID.equals("\"\"")) {
+            if (sessionID == null || sessionID.equals("\"\"")) {
                 JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.html");
                 JtwigModel model = JtwigModel.newModel();
                 response = template.render(model);
@@ -158,18 +154,9 @@ public class LoginController implements HttpHandler {
                 String sessionID = String.valueOf(counter++);
                 setCookie("sessionID", sessionID, httpExchange);
                 sessions.put(sessionID, inputs.get("login"));
-                //for tests
-//                        response = "zalogowalo sie!!!";
                 System.out.println(String.valueOf(counter));
 
-                // wielki if w zaleznosci od uzytkownika odpoala sie jtwig z odpowiednim menu
-//                            text_response = createHelloText(counter, login);
-
                 } else {
-//                        //for tests
-//                        response = "Password incorrect. Please log in again.";
-//                        System.out.println(response);
-
                     JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/login.html");
                     JtwigModel model = JtwigModel.newModel();
                     model.with("validationInfo", "Password incorrect. Please log in again!");

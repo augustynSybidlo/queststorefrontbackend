@@ -5,19 +5,11 @@ import DAOs.*;
 import Iterator.CollectionIterator;
 import Models.*;
 import Views.UserView;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import org.jtwig.JtwigModel;
-import org.jtwig.JtwigTemplate;
 
-import java.io.*;
-import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class AdminController{
+public class AdminController {
 
     private UsersDao dao = new UsersDaoImpl();
     private UserView view = new UserView();
@@ -219,5 +211,7 @@ public class AdminController{
         return dao;
     }
 
-
+    public GroupDao getGroupDao() {
+        return groupDao;
+    }
 }
