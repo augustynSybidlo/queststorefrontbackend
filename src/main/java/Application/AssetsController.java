@@ -17,9 +17,6 @@ public class AssetsController implements HttpHandler {
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
         try {
-
-
-
             String requestPath = httpExchange.getRequestURI().getPath();
 
             File homedir = new File(System.getProperty("user.dir"));
@@ -36,7 +33,6 @@ public class AssetsController implements HttpHandler {
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 
     private static byte[] readFile(String path)
@@ -44,6 +40,4 @@ public class AssetsController implements HttpHandler {
     {
         return Files.readAllBytes(Paths.get(path));
     }
-
-
 }

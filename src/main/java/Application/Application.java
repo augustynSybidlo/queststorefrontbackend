@@ -1,5 +1,6 @@
 package Application;
 
+import Controllers.AdminController;
 import Controllers.LoginController;
 import com.sun.net.httpserver.HttpServer;
 
@@ -13,6 +14,7 @@ public class Application{
 
         server.createContext("/login", new LoginController());
         server.createContext("/assets", new AssetsController());
+        server.createContext("/admin", new AdminController());
         server.setExecutor(null);
 
 

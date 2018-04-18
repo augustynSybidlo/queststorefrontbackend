@@ -13,22 +13,24 @@ import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginController implements HttpHandler {
     private LoginView view = new LoginView();
     private UsersDao usersDao = new UsersDaoImpl();
     private ArrayList<User> usersCollection = usersDao.getUsersCollection();
 
-    public void login() {
+    public void login(String login, String password) {
         boolean isLoginSession = true;
 
         while (isLoginSession) {
             view.clearScreen();
-            String userLogin = view.getLogin();
-            String userPassword = view.getPassword();
+            String userLogin = login;
+            String userPassword = password;
             String userStatus = getUserStatus(userLogin, userPassword);
             if (checkIfUserExists(userLogin) && checkUserPassword(userLogin, userPassword)) {
                 runProperUserPanel(userLogin, userPassword, userStatus);
@@ -43,8 +45,8 @@ public class LoginController implements HttpHandler {
                 return true;
             }
         }
-        view.displayText("Given user does not exists!");
-        sleepThreadForOneSec();
+//        view.displayText("Given user does not exists!");
+//        sleepThreadForOneSec();
         return false;
     }
 
@@ -87,7 +89,7 @@ public class LoginController implements HttpHandler {
 
     private void runProperUserPanel(String userLogin, String userPassword, String userStatus) {
         if(userStatus.equals("admin")) {
-            User user = new Admin(userLogin, userPassword, userStatus);
+//            User user = new Admin(userLogin, userPassword, userStatus);
             AdminController controller = new AdminController();
             controller.startAdminPanel();
         }
@@ -108,7 +110,7 @@ public class LoginController implements HttpHandler {
         try {
             String response = "";
             String method = httpExchange.getRequestMethod();
-
+            System.out.println(method);
 
             if (method.equals("GET")) {
 
@@ -125,17 +127,38 @@ public class LoginController implements HttpHandler {
                 response = template.render(model);
 
                 // send the results to a the client
+            }
 
+            if(method.equals("POST")){
+                InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+                BufferedReader br = new BufferedReader(isr);
+                String formData = br.readLine();
 
+                System.out.println(formData);
+                Map<String, String> inputs = parseFormData(formData);
+                System.out.println(inputs.toString());
+                login(inputs.get("login"), inputs.get("password"));
             }
 
             httpExchange.sendResponseHeaders(200, response.length());
             OutputStream os = httpExchange.getResponseBody();
             os.write(response.getBytes());
             os.close();
+
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
 
+    private static Map<String, String> parseFormData(String formData) throws UnsupportedEncodingException {
+        Map<String, String> map = new HashMap<>();
+        String[] pairs = formData.split("&");
+        for(String pair : pairs){
+            String[] keyValue = pair.split("=");
+            // We have to decode the value because it's urlencoded. see: https://en.wikipedia.org/wiki/POST_(HTTP)#Use_for_submitting_web_forms
+            String value = new URLDecoder().decode(keyValue[1], "UTF-8");
+            map.put(keyValue[0], value);
+        }
+        return map;
     }
 }

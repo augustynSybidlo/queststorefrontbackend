@@ -5,11 +5,19 @@ import DAOs.*;
 import Iterator.CollectionIterator;
 import Models.*;
 import Views.UserView;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import org.jtwig.JtwigModel;
+import org.jtwig.JtwigTemplate;
 
+import java.io.*;
+import java.net.URLDecoder;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class AdminController {
+public class AdminController implements HttpHandler {
 
     private UsersDao dao = new UsersDaoImpl();
     private UserView view = new UserView();
@@ -205,5 +213,61 @@ public class AdminController {
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    @Override
+    public void handle(HttpExchange httpExchange) throws IOException {
+        try {
+            String response = "";
+            String method = httpExchange.getRequestMethod();
+            System.out.println(method);
+
+            if (method.equals("GET")) {
+
+                // client's address
+                String userAgent = httpExchange.getRequestHeaders().getFirst("User-agent");
+
+                // get a template file
+                JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin.html");
+
+                // create a model that will be passed to a template
+                JtwigModel model = JtwigModel.newModel();
+
+                // render a template to a string
+                response = template.render(model);
+
+                // send the results to a the client
+            }
+
+            if(method.equals("POST")){
+                InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+                BufferedReader br = new BufferedReader(isr);
+                String formData = br.readLine();
+
+                System.out.println(formData);
+                Map<String, String> inputs = parseFormData(formData);
+
+            }
+
+            httpExchange.sendResponseHeaders(200, response.length());
+            OutputStream os = httpExchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private static Map<String, String> parseFormData(String formData) throws UnsupportedEncodingException {
+        Map<String, String> map = new HashMap<>();
+        String[] pairs = formData.split("&");
+        for(String pair : pairs){
+            String[] keyValue = pair.split("=");
+            // We have to decode the value because it's urlencoded. see: https://en.wikipedia.org/wiki/POST_(HTTP)#Use_for_submitting_web_forms
+            String value = new URLDecoder().decode(keyValue[1], "UTF-8");
+            map.put(keyValue[0], value);
+        }
+        return map;
     }
 }
