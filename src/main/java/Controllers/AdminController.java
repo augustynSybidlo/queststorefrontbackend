@@ -210,4 +210,8 @@ public class AdminController {
     public UsersDao getDao() {
         return dao;
     }
+
+    public GroupDao getGroupDao() {
+        return groupDao;
+    }
 }
