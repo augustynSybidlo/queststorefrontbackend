@@ -206,4 +206,8 @@ public class AdminController {
             Thread.currentThread().interrupt();
         }
     }
+
+    public UsersDao getDao() {
+        return dao;
+    }
 }
