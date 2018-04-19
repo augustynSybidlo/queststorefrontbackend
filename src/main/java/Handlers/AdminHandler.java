@@ -113,9 +113,9 @@ public class AdminHandler implements HttpHandler {
         return mentorId;
     }
 
-//    public String parseChoosingGroupMenu(HttpExchange httpExchange, Integer mentorId){
-//
-//    }
+    public String parseChoosingGroupMenu(HttpExchange httpExchange, Integer mentorId){
+
+    }
 
     public String parseAddMentorMenu(HttpExchange httpExchange) throws IOException{
 
