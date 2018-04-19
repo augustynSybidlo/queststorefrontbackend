@@ -32,7 +32,7 @@ public class AdminController {
         groupDao.addGroupToDatabase(group);
     }
 
-    private void assignMentorToGroup(String id, String groupName) throws SQLException {
+    public void assignMentorToGroup(String id, String groupName) throws SQLException {
         try {
             int mentorId = Integer.parseInt(id);
             Mentor mentor = dao.getMentorById(mentorId);

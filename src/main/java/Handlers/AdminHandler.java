@@ -23,6 +23,8 @@ public class AdminHandler implements HttpHandler {
 //    private static List<Student> students = new ArrayList<>();
     private static AdminController adminController = new AdminController();
     private static List<User> mentors = adminController.getAllMentors();
+    private static ArrayList<Group> groups = adminController.getAllGroups();
+    private static String chosenMentor = null;
 
     public void handle(HttpExchange httpExchange) throws IOException {
 
@@ -43,6 +45,7 @@ public class AdminHandler implements HttpHandler {
                 response = saveAddedMentorAndGoBackToMenu(httpExchange);
             }
         }
+
         else if (uri.startsWith("addgroup", "/adminhome/".length())){
             response = parseAddGroupMentorMenu(httpExchange);
 
@@ -55,10 +58,12 @@ public class AdminHandler implements HttpHandler {
             response = parseChoosingMentorMenu(httpExchange);
 
             if (method.equals("POST")){
-                Integer mentorId = goToGroupChoosingMenuAfterChoosingMentor(httpExchange);
+                goToGroupChoosingMenuAfterChoosingMentor(httpExchange);
                 response = parseChoosingGroupMenu(httpExchange);
-
             }
+        }
+        else if (uri.startsWith("assignmentor/assigngroup", "/adminhome/".length())){
+            response = chooseGroupAndAssignMentorToIt(httpExchange, chosenMentor);
         }
 
         if (response.isEmpty()) {
@@ -95,18 +100,16 @@ public class AdminHandler implements HttpHandler {
         return response;
     }
 
-    public Integer goToGroupChoosingMenuAfterChoosingMentor(HttpExchange httpExchange) throws IOException {
+    public void goToGroupChoosingMenuAfterChoosingMentor(HttpExchange httpExchange) throws IOException {
         InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
         BufferedReader br = new BufferedReader(isr);
         String formData = br.readLine();
 
         Map<String, String> inputData = parseFormData(formData);
-        Integer mentorId = (Integer.parseInt(inputData.get("name")));
-
-        return mentorId;
+        chosenMentor = inputData.get("name");
     }
 
-    public String parseChoosingGroupMenu(HttpExchange httpExchange){
+    public String parseChoosingGroupMenu(HttpExchange httpExchange) throws IOException {
         String method = httpExchange.getRequestMethod();
         String response = "";
 
@@ -126,15 +129,28 @@ public class AdminHandler implements HttpHandler {
             JtwigModel model = JtwigModel.newModel().with("mentors", rowCollection);
             response = template.render(model);
         }
+        byte[] bytes = response.getBytes("UTF-8");
+        httpExchange.sendResponseHeaders(200, bytes.length);
+        OutputStream os = httpExchange.getResponseBody();
+        os.write(bytes);
+        os.close();
+        httpExchange.close();
         return response;
     }
 
-    public String chooseGroupAndAssignMentorToIt(HttpExchange httpExchange) throws IOException {
+    public String chooseGroupAndAssignMentorToIt(HttpExchange httpExchange, String mentorId) throws IOException {
+        String response = "";
         InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
         BufferedReader br = new BufferedReader(isr);
         String formData = br.readLine();
-
-
+        Map<String, String> inputData = parseFormData(formData);
+        String groupName = inputData.get("name");
+        try {
+            adminController.assignMentorToGroup(mentorId, groupName);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
     public String parseAddMentorMenu(HttpExchange httpExchange) throws IOException{
