@@ -32,11 +32,10 @@ public class Mentor extends User {
 
     @Override
     public String toString() {
-        return  String.format("ID: %d, NAME: %s, SURNAME: %s, EMAIL: %s, GROUP: %s",
+        return  String.format("ID: %d, NAME: %s, SURNAME: %s, GROUP: %s",
                               this.id,
                               this.name,
                               this.surname,
-                              this.login,
                               this.getUserGroupName());
     }
 }

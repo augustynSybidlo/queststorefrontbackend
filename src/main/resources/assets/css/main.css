@@ -99,11 +99,17 @@ input[type=text], .login, .password, .new-name, .new-surname, .new-password {
     cursor: url("../img/keybord.png"), auto;
 }
 
-p {
+p, table {
     color: goldenrod;
     font-family: "Press Start 2P", cursive;
     font-size: large;
 }
+
+/*table {*/
+    /*color: goldenrod;*/
+    /*font-family: "Press Start 2P", cursive;*/
+    /*font-size: ;*/
+/*}*/
 
 ::-moz-placeholder {
     color: goldenrod;
@@ -151,7 +157,7 @@ p {
 
 /* Positioning */
 
-form, .menu {
+table, form, .menu {
     display: flex;
     flex-direction: column;
     justify-content: center;
