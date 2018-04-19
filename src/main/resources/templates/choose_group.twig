@@ -34,13 +34,13 @@
 </header>
 <body>
 <table>
-    {% for mentor in mentors %}
-        {{ mentor }}
+    {% for group in groups %}
+        {{ group }}
     {% endfor %}
 </table>
 <div>
     <form class="choose-mentor-form" method="POST">
-        <input class="new-group" type="text" name="name" placeholder="Mentor id:"><br>
+        <input class="new-group" type="text" name="name" placeholder="Group name:"><br>
         <input class="submit-login" type="image" value="PLAY" src="/assets/img/submit.png" onclick="play()">
     </form>
 </div>

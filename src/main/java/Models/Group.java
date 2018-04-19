@@ -18,4 +18,10 @@ public class Group {
     }
 
     public int getGroupId() { return this.groupId; }
+
+    @Override
+    public String toString() {
+        return "Group Name ='" + groupName + '\'' +
+                "Group Id = " + groupId;
+    }
 }

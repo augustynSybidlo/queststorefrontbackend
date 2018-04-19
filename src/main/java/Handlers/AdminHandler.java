@@ -22,6 +22,7 @@ public class AdminHandler implements HttpHandler {
 
 //    private static List<Student> students = new ArrayList<>();
     private static AdminController adminController = new AdminController();
+    private static List<Group> groups = (List<Group>) adminController.getGroupDao().getGroups();
     private static List<User> mentors = adminController.getDao().getAllUsersByStatus("mentor");
 
     public void handle(HttpExchange httpExchange) throws IOException {
@@ -56,6 +57,7 @@ public class AdminHandler implements HttpHandler {
 
             if (method.equals("POST")){
                 Integer mentorId = goToGroupChoosingMenuAfterChoosingMentor(httpExchange);
+                response = parseChoosingGroupMenu(httpExchange);
 
             }
         }
@@ -105,7 +107,34 @@ public class AdminHandler implements HttpHandler {
         return mentorId;
     }
 
-    public String parseChoosingGroupMenu(HttpExchange httpExchange, Integer mentorId){
+    public String parseChoosingGroupMenu(HttpExchange httpExchange){
+        String method = httpExchange.getRequestMethod();
+        String response = "";
+
+        if (method.equals("GET")) {
+
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/choose_group.twig");
+
+            List<String> rowCollection = new ArrayList<>();
+
+            for (Group group: groups){
+                String current = "<tr>" +
+                        "    <td>" + group.toString() + "</td>" +
+                        "</tr>";
+                rowCollection.add(current);
+            }
+
+            JtwigModel model = JtwigModel.newModel().with("mentors", rowCollection);
+            response = template.render(model);
+        }
+        return response;
+    }
+
+    public String chooseGroupAndAssignMentorToIt(HttpExchange httpExchange) throws IOException {
+        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String formData = br.readLine();
+
 
     }
 
