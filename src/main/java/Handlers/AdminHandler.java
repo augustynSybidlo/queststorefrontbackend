@@ -2,7 +2,6 @@ package Handlers;
 
 import Controllers.AdminController;
 import Models.Mentor;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
@@ -30,7 +29,7 @@ public class AdminHandler implements HttpHandler {
 //        int startIndex = "/adminhome/".length();
 //        uri = uri.substring(startIndex);
         JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/admin_home.twig");
-        JtwigModel model = JtwigModel.newModel();;
+        JtwigModel model = JtwigModel.newModel();
 
         if (uri.startsWith("addmentor", "/adminhome/".length())){
             System.out.println("uri:" + uri);
@@ -40,18 +39,9 @@ public class AdminHandler implements HttpHandler {
             if (method.equals("POST")){
                 response = saveAddedMentorAndGoBackToMenu(httpExchange);
             }
-
-//            if (response.isEmpty()){
-//                /* redirect to index*/
-//                Headers responseHeaders = httpExchange.getResponseHeaders();
-//                responseHeaders.add("Location", "/admin_home/");
-//                httpExchange.sendResponseHeaders(302, -1);
-//                httpExchange.close();
-//            }
         }
 
         if (response.isEmpty()) {
-
             response = template.render(model);
         }
 
@@ -70,9 +60,8 @@ public class AdminHandler implements HttpHandler {
 
         if (method.equals("GET")) {
 
-            System.out.println("DZIAŁA");
             JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/add_mentor.twig");
-            JtwigModel model = JtwigModel.newModel()/*.with("fiels", fieldCollection) podobnie jak index*/;
+            JtwigModel model = JtwigModel.newModel();
 
             response = template.render(model);
         }
@@ -97,7 +86,6 @@ public class AdminHandler implements HttpHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return response;
     }
 

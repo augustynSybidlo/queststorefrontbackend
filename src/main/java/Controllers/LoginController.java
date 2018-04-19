@@ -97,14 +97,10 @@ public class LoginController implements HttpHandler {
     private void runProperUserPanel(String userLogin, String userPassword, String userStatus, HttpExchange httpExchange) {
         if(userStatus.equals("admin")) {
             redirectTo(httpExchange, "/adminhome");
-//        } else if (userStatus.equals("mentor")) {
-//            User user = new Mentor(userLogin, userPassword, userStatus);
-//            MentorController controller = new MentorController();
-//            controller.startMentorPanel();
+        } else if (userStatus.equals("mentor")) {
+            redirectTo(httpExchange, "/mentorhome");
 //        } else if (userStatus.equals("student")) {
-//            Student user = (Student) getUserAccount(userLogin, userPassword);
-//            StudentController controller = new StudentController();
-//            controller.startStudentPanel(user);
+//            redirectTo(httpExchange, "/studenthome");
         }
     }
 
