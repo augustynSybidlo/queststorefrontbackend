@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
 
     <link rel="manifest" href="site.webmanifest">
-    <link rel="apple-touch-icon" href="icon.png">
+    <link rel="apple-touch-icon" href="/assets/img/icon.png">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/assets/css/normalize.css">
@@ -26,18 +26,21 @@
 <!-- Add your site or application content here -->
 <header>
     <div>
-        <a class="exit" href=""><img src="/assets/img/exit.png"></a>
+        <a class="exit" href="adminhome/"><img src="/assets/img/exit.png"></a>
     </div>
     <div class="headermain">
         <a href="index.html"><img src="/assets/img/header_main.png" alt="Codecool system"></a>
     </div>
 </header>
 <body>
+<table>
+    {% for mentor in mentors %}
+        {{ mentor }}
+    {% endfor %}
+</table>
 <div>
-    <form class="add-mentor-form" method="POST">
-        <input class="new-name" type="text" name="name" placeholder="Name:"><br>
-        <input class="new-surname" type="text" name="surname" placeholder="Surname:"><br>
-        <input class="new-password" type="password" name="password" placeholder="Password:"><br>
+    <form class="choose-mentor-form" method="POST">
+        <input class="new-group" type="text" name="name" placeholder="Mentor id:"><br>
         <input class="submit-login" type="image" value="PLAY" src="/assets/img/submit.png" onclick="play()">
     </form>
 </div>
@@ -66,5 +69,6 @@
     ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
 </script>
 <script src="https://www.google-analytics.com/analytics.js" async defer></script>
+</body>
 </body>
 </html>

@@ -3,6 +3,7 @@ package Handlers;
 import Controllers.AdminController;
 import Models.Group;
 import Models.Mentor;
+import Models.User;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -21,6 +22,7 @@ public class AdminHandler implements HttpHandler {
 
 //    private static List<Student> students = new ArrayList<>();
     private static AdminController adminController = new AdminController();
+    private static List<User> mentors = adminController.getDao().getAllUsersByStatus("mentor");
 
     public void handle(HttpExchange httpExchange) throws IOException {
 
@@ -56,6 +58,15 @@ public class AdminHandler implements HttpHandler {
             }
         }
 
+        else if (uri.startsWith("assignmentor", "/adminhome/".length())){
+            response = parseChoosingMentorMenu(httpExchange);
+
+            if (method.equals("POST")){
+                Integer mentorId = goToGroupChoosingMenuAfterChoosingMentor(httpExchange);
+
+            }
+        }
+
         if (response.isEmpty()) {
 
             response = template.render(model);
@@ -68,6 +79,43 @@ public class AdminHandler implements HttpHandler {
         os.close();
         httpExchange.close();
     }
+
+    private String parseChoosingMentorMenu(HttpExchange httpExchange) {
+        String method = httpExchange.getRequestMethod();
+        String response = "";
+
+        if (method.equals("GET")) {
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/choose_mentor.twig");
+
+            List<String> rowCollection = new ArrayList<>();
+
+            for (User mentor : mentors){
+                String current = "<tr>" +
+                        "    <td>" + mentor.toString() + "</td>" +
+                        "</tr>";
+                rowCollection.add(current);
+            }
+
+            JtwigModel model = JtwigModel.newModel().with("mentors", rowCollection);
+            response = template.render(model);
+        }
+        return response;
+    }
+
+    public Integer goToGroupChoosingMenuAfterChoosingMentor(HttpExchange httpExchange) throws IOException {
+        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String formData = br.readLine();
+
+        Map<String, String> inputData = parseFormData(formData);
+        Integer mentorId = (Integer.parseInt(inputData.get("name")));
+
+        return mentorId;
+    }
+
+//    public String parseChoosingGroupMenu(HttpExchange httpExchange, Integer mentorId){
+//
+//    }
 
     public String parseAddMentorMenu(HttpExchange httpExchange) throws IOException{
 

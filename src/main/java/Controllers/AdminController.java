@@ -42,7 +42,7 @@ public class AdminController {
                     createNewGroup();
                     break;
                 case "3":
-                    assignMentorToGroup();
+//                    assignMentorToGroup();
                     break;
                 case "4":
                     editMentorData();
@@ -58,6 +58,7 @@ public class AdminController {
                     Thread.sleep(1000);
                     break;
             }
+
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (SQLException e) {
@@ -81,10 +82,8 @@ public class AdminController {
         groupDao.addGroupToDatabase(group);
     }
 
-    private void assignMentorToGroup() throws SQLException {
+    private void assignMentorToGroup(int mentorId) throws SQLException {
         try {
-            getAllMentors();
-            int mentorId = Integer.parseInt(view.getInput("Choose mentor by ID"));
             Mentor mentor = dao.getMentorById(mentorId);
             view.clearScreen();  // clear before displaying group names
             view.displayText("Choose group from those listed below:");
