@@ -70,7 +70,6 @@ public class AdminHandler implements HttpHandler {
 
         if (method.equals("GET")) {
 
-            System.out.println("DZIAŁA");
             JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/add_mentor.twig");
             JtwigModel model = JtwigModel.newModel()/*.with("fiels", fieldCollection) podobnie jak index*/;
 
