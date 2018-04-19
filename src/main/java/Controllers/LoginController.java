@@ -9,22 +9,18 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import com.sun.xml.internal.bind.v2.TODO;
 import org.jtwig.JtwigModel;
 import org.jtwig.JtwigTemplate;
 
 import java.io.*;
 import java.net.HttpCookie;
 import java.net.URLDecoder;
-import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LoginController implements HttpHandler {
 
-    private List<String> logins = Arrays.asList("admin");
-    private List<String> passwords = Arrays.asList("admin");
     private Map<String, String> sessions = new HashMap<String, String>();
     private int counter = 0;
 

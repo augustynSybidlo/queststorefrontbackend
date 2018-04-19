@@ -92,7 +92,6 @@ public class AdminController {
     }
 
     public ArrayList<User> getAllMentors() {
-        view.clearScreen();
         ArrayList<User> mentorsCollection = dao.getAllUsersByStatus("mentor");
         return mentorsCollection;
     }

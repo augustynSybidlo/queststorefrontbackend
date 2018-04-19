@@ -89,7 +89,9 @@ public class AdminHandler implements HttpHandler {
 
             for (User mentor : mentors){
                 String current = "<tr>" +
-                        "    <td>" + mentor.toString() + "</td>" +
+                        "    <td>" + mentor.getId() + "</td>" +
+                        "    <td>" + mentor.getName() + "</td>" +
+                        "    <td>" + mentor.getSurname() + "</td>" +
                         "</tr>";
                 rowCollection.add(current);
             }
@@ -121,7 +123,8 @@ public class AdminHandler implements HttpHandler {
 
             for (Group group: groups){
                 String current = "<tr>" +
-                        "    <td>" + group.toString() + "</td>" +
+                        "    <td>" + group.getGroupId() + "</td>" +
+                        "    <td>" + group.getGroupName() + "</td>" +
                         "</tr>";
                 rowCollection.add(current);
             }

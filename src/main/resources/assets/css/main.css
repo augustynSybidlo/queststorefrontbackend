@@ -154,7 +154,7 @@ form, .menu {
 table {
     display: flex;
     flex-direction: row;
-    align-content: center;
+    justify-content: center;
     padding-top: 5%;
     padding-right: 10%;
     padding-left: 10%;
@@ -162,8 +162,9 @@ table {
     font-size: xx-large;
 }
 
-table, th, td, tr {
-    border: 2px darkgoldenrod;
+th, td {
+    border: 5px solid darkgoldenrod;
+    padding: 20px;
 }
 
 .header-main {
