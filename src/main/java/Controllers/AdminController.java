@@ -2,7 +2,6 @@ package Controllers;
 
 
 import DAOs.*;
-import Iterator.CollectionIterator;
 import Models.*;
 import Views.UserView;
 
@@ -15,102 +14,44 @@ public class AdminController {
     private UserView view = new UserView();
     private GroupDao groupDao = new GroupDaoImpl();
     private ExperienceLevelsDao levelsDao = new ExperienceLevelsDaoImpl();
-    private boolean isRuntime = true;
 
-    public void startAdminPanel() {
+    public AdminController() {
         groupDao.importGroups();
         levelsDao.importExperienceLevels();
-
-        while(isRuntime) {
-            view.displayUserMenu("txt/adminMenu.txt");
-            handleAdminPanelOptions();
-        }
     }
 
-    private void handleAdminPanelOptions() {
-        try {
-            String choice = view.getInput("Choose your option: ");
-            switch (choice) {
-                case "0":
-                    dao.disconnectDatabase();
-                    isRuntime = false;
-                    break;
-                case "1":
-                    createNewMentor();
-                    break;
-                case "2":
-                    createNewGroup();
-                    break;
-                case "3":
-//                    assignMentorToGroup();
-                    break;
-                case "4":
-                    editMentorData();
-                    break;
-                case "5":
-                    getSpecificMentorData();
-                    break;
-                case "6":
-                    createNewLevelOfExperience();
-                    break;
-                default:
-                    view.displayText("No such option exists!");
-                    Thread.sleep(1000);
-                    break;
-            }
-
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void createNewMentor() throws SQLException {
-        String mentorName = view.getInput("Enter mentor's name: ");
-        String mentorSurname = view.getInput("Enter mentor's surname: ");
-        String mentorPassword = view.getInput("Enter mentor's password: ");
+    public void createNewMentor(String mentorName, String mentorSurname, String mentorPassword) throws SQLException {
         Mentor newMentor = new Mentor(mentorName, mentorSurname, mentorPassword);
         dao.addUserToDatabase(newMentor);
         dao.importUsersData();
     }
 
-    private void createNewGroup() throws SQLException {
-        String groupName = view.getInput("Enter new group name: ");
+    public void createNewGroup(String groupName) throws SQLException {
         Group group = new Group(groupName);
         groupDao.addGroup(group);
         groupDao.addGroupToDatabase(group);
     }
 
-    private void assignMentorToGroup(int mentorId) throws SQLException {
+    private void assignMentorToGroup(String id, String groupName) throws SQLException {
         try {
+            int mentorId = Integer.parseInt(id);
             Mentor mentor = dao.getMentorById(mentorId);
-            view.clearScreen();  // clear before displaying group names
-            view.displayText("Choose group from those listed below:");
-            getAllGroupsNames();
-            String groupName = view.getInput("Choose group name:");
             Group newGroup = groupDao.getGroupByName(groupName);
             mentor.setMentorGroup(newGroup);
             dao.updateUserGroupInDatabase(mentor);
         } catch (NullPointerException e) {
-            try {
-                view.displayText("No such mentor or group exists!");
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-        } catch (NumberFormatException e) {
-            promptMessageAndStopThread("No such mentor or group exists!");
+            e.printStackTrace();
         }
     }
 
-    private void editMentorData() throws SQLException {
+    public void editMentorData(String id, String newName,
+                                String newSurname, String newPassword) throws SQLException {
         try {
-            getAllMentors();
-            int mentorId = Integer.parseInt(view.getInput("Choose mentor by ID"));
+            int mentorId = Integer.parseInt(id);
             if(checkIfGivenIdMentorExists(mentorId)) {
                 Mentor mentor = dao.getMentorById(mentorId);
-                setExistingMentorNewData(mentor);
+                setExistingMentorNewData(mentor, newName,
+                        newSurname, newPassword);
                 dao.updateUserDataInDatabase(mentor);
             }
             else {
@@ -124,24 +65,20 @@ public class AdminController {
         }
     }
 
-    private void setExistingMentorNewData(Mentor mentor) {
-        String newName = view.getInput("Enter mentor's new name: ");
-        String newSurname = view.getInput("Enter mentor's new surname: ");
-        String newPassword = view.getInput("Enter mentor's new password: ");
+    private void setExistingMentorNewData(Mentor mentor, String newName,
+                                          String newSurname, String newPassword) {
         mentor.setMentorName(newName);
         mentor.setMentorSurname(newSurname);
         mentor.setMentorPassword(newPassword);
         mentor.setMentorLogin(newName, newSurname);
     }
 
-    private void getSpecificMentorData() {
+    private Mentor getSpecificMentorData(String id) {
+        Mentor mentor = null;
         try {
-            getAllMentors();
-            int mentorId = Integer.parseInt(view.getInput("Choose mentor by ID"));
+            int mentorId = Integer.parseInt(id);
             if (checkIfGivenIdMentorExists(mentorId)) {
-                Mentor mentor = dao.getMentorById(mentorId);
-                view.displayText(mentor.toString());
-                view.getInput("Press any key to continue");
+                mentor = dao.getMentorById(mentorId);
             } else {
                 view.displayText("No mentor with given ID exists!");
                 Thread.sleep(1000);
@@ -151,26 +88,18 @@ public class AdminController {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+        return mentor;
     }
 
-    private void getAllMentors() {
+    public ArrayList<User> getAllMentors() {
         view.clearScreen();
         ArrayList<User> mentorsCollection = dao.getAllUsersByStatus("mentor");
-        for(User mentor : mentorsCollection) {
-            int mentorId = mentor.getId();
-            String mentorName = mentor.getName();
-            String mentorSurname = mentor.getSurname();
-            view.displayText("ID: "+mentorId +" "+mentorName+" "+mentorSurname);
-        }
+        return mentorsCollection;
     }
 
-    private void getAllGroupsNames() {
+    public ArrayList<Group> getAllGroups() {
         ItemCollection<Group> allGroups = groupDao.getGroups();
-        CollectionIterator<Group> groupIterator = allGroups.getIterator();
-        while(groupIterator.hasNext()) {
-            Group group = groupIterator.next();
-            view.displayText(group.getGroupName());
-        }
+        return allGroups.getCollection();
     }
 
     private boolean checkIfGivenIdMentorExists(int id) {
@@ -184,11 +113,9 @@ public class AdminController {
         return false;
     }
 
-    private void createNewLevelOfExperience() throws SQLException {
+    public void createNewLevelOfExperience(String levelName, String levelAsString) throws SQLException {
         try {
-            view.clearScreen();
-            String levelName = view.getInput("Set level name: ");
-            int level = Integer.parseInt(view.getInput("Set xp needed to reach level: "));
+            int level = Integer.parseInt(levelAsString);
             ExperienceLevel newLevel = new ExperienceLevel(level, levelName);
             newLevel.addExperienceLevel(newLevel);
             levelsDao.addExperienceLevelToDatabase(newLevel);
@@ -204,13 +131,5 @@ public class AdminController {
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
         }
-    }
-
-    public UsersDao getDao() {
-        return dao;
-    }
-
-    public GroupDao getGroupDao() {
-        return groupDao;
     }
 }

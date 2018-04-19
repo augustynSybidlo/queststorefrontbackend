@@ -22,8 +22,7 @@ public class AdminHandler implements HttpHandler {
 
 //    private static List<Student> students = new ArrayList<>();
     private static AdminController adminController = new AdminController();
-    private static List<Group> groups = (List<Group>) adminController.getGroupDao().getGroups();
-    private static List<User> mentors = adminController.getDao().getAllUsersByStatus("mentor");
+    private static List<User> mentors = adminController.getAllMentors();
 
     public void handle(HttpExchange httpExchange) throws IOException {
 
@@ -179,11 +178,9 @@ public class AdminHandler implements HttpHandler {
 
         /* parse key=value&another_key=another_value and escaped unicode codepoints into usable form */
         Map<String, String> inputData = parseFormData(formData);
-        Group newGroup = new Group(inputData.get("name"));
 
         try {
-            adminController.getGroupDao().addGroupToDatabase(newGroup);
-            adminController.getGroupDao().addGroup(newGroup);
+            adminController.createNewGroup(inputData.get("name"));
         }
         catch (SQLException e){
             e.printStackTrace();
@@ -201,11 +198,9 @@ public class AdminHandler implements HttpHandler {
 
         /* parse key=value&another_key=another_value and escaped unicode codepoints into usable form */
         Map<String, String> inputData = parseFormData(formData);
-        System.out.println(inputData.get("name"));
-        Mentor newMentor = new Mentor(inputData.get("name"), inputData.get("surname"), inputData.get("password"));
 
         try {
-            adminController.getDao().addUserToDatabase(newMentor);
+            adminController.createNewMentor(inputData.get("name"), inputData.get("surname"), inputData.get("password"));
         } catch (SQLException e) {
             e.printStackTrace();
         }

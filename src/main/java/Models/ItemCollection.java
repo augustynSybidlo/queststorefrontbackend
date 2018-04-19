@@ -31,4 +31,8 @@ public class ItemCollection<T> {
     public String getName(){
         return this.name;
     }
+
+    public ArrayList<T> getCollection() {
+        return collection;
+    }
 }
