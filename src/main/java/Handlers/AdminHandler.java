@@ -22,7 +22,7 @@ public class AdminHandler implements HttpHandler {
 
 //    private static List<Student> students = new ArrayList<>();
     private static AdminController adminController = new AdminController();
-    private static List<User> mentors = adminController.getDao().getAllUsersByStatus("mentor");
+    private static List<User> mentors = adminController.getAllMentors();
 
     public void handle(HttpExchange httpExchange) throws IOException {
 
@@ -106,7 +106,7 @@ public class AdminHandler implements HttpHandler {
     }
 
     public String parseChoosingGroupMenu(HttpExchange httpExchange, Integer mentorId){
-
+        return "";
     }
 
     public String parseAddMentorMenu(HttpExchange httpExchange) throws IOException{

@@ -91,13 +91,13 @@ public class AdminController {
         return mentor;
     }
 
-    private ArrayList<User> getAllMentors() {
+    public ArrayList<User> getAllMentors() {
         view.clearScreen();
         ArrayList<User> mentorsCollection = dao.getAllUsersByStatus("mentor");
         return mentorsCollection;
     }
 
-    private ArrayList<Group> getAllGroups() {
+    public ArrayList<Group> getAllGroups() {
         ItemCollection<Group> allGroups = groupDao.getGroups();
         return allGroups.getCollection();
     }
