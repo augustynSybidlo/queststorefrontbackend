@@ -11,7 +11,7 @@ queststorefrontbackend.iml
 queststore-front-back-end.iml
 target/
 .idea/
-
+queststore-front-back-end.iml
 # Sensitive or high-churn files:
 .idea/**/dataSources/
 .idea/**/dataSources.ids

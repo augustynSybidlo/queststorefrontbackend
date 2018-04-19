@@ -1,31 +1,25 @@
 package Application;
 
 import Controllers.LoginController;
-import Handlers.AdminHandler;
 import com.sun.net.httpserver.HttpServer;
-
-import java.io.IOException;
 import java.net.InetSocketAddress;
+
+import Handlers.AdminHandler;
 
     public class Application {
 
-        public static void main(String[] args) {
+    public static void main (String[] argv) throws Exception{
 
-            // create a server on port 8000
-            HttpServer server = null;
-            try {
-                server = HttpServer.create(new InetSocketAddress(8000), 0);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
-            // set routes
-//        server.createContext("/", new StudentHandler());
-            server.createContext("/adminhome/", new AdminHandler());
-            server.createContext("/assets", new AssetsController());
-            server.setExecutor(null); // creates a default executor
-
-            // start listening
-            server.start();
-        }
+        server.createContext("/login", new LoginController());
+        server.createContext("/assets", new AssetsController());
+        server.createContext("/adminhome", new AdminHandler());
+        server.setExecutor(null);
+        server.start();
     }
+
+
+
+
+}

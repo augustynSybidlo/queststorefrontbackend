@@ -21,7 +21,6 @@ public class AssetsController implements HttpHandler {
             String requestPath = httpExchange.getRequestURI().getPath();
 
             File homedir = new File(System.getProperty("user.dir"));
-            System.out.println("homedir: " + homedir);
             File filePath = new File(homedir, "/src/main/resources/" + requestPath);
 
             byte[] response = readFile(filePath.toString());
@@ -34,6 +33,7 @@ public class AssetsController implements HttpHandler {
         }catch (Exception e){
             e.printStackTrace();
         }
+
     }
 
     private static byte[] readFile(String path)
@@ -41,6 +41,4 @@ public class AssetsController implements HttpHandler {
     {
         return Files.readAllBytes(Paths.get(path));
     }
-
-
 }

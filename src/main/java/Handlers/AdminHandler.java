@@ -33,6 +33,7 @@ public class AdminHandler implements HttpHandler {
         JtwigModel model = JtwigModel.newModel();;
 
         if (uri.startsWith("addmentor", "/adminhome/".length())){
+            System.out.println("uri:" + uri);
 
             response = parseAddMentorMenu(httpExchange);
 
