@@ -40,7 +40,6 @@ public class AdminHandler implements HttpHandler {
             if (method.equals("POST")){
                 response = saveAddedMentorAndGoBackToMenu(httpExchange);
             }
-
 //            if (response.isEmpty()){
 //                /* redirect to index*/
 //                Headers responseHeaders = httpExchange.getResponseHeaders();
@@ -48,6 +47,13 @@ public class AdminHandler implements HttpHandler {
 //                httpExchange.sendResponseHeaders(302, -1);
 //                httpExchange.close();
 //            }
+        }
+        else if (uri.startsWith("addgroup", "/adminhome/".length())){
+            response = parseAddGroupMentorMenu(httpExchange);
+
+            if (method.equals("POST")){
+                response = saveAddedGroup(httpExchange);
+            }
         }
 
         if (response.isEmpty()) {
