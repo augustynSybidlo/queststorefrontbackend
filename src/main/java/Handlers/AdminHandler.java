@@ -1,7 +1,9 @@
 package Handlers;
 
 import Controllers.AdminController;
+import Models.Group;
 import Models.Mentor;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.jtwig.JtwigModel;
@@ -32,12 +34,18 @@ public class AdminHandler implements HttpHandler {
         JtwigModel model = JtwigModel.newModel();
 
         if (uri.startsWith("addmentor", "/adminhome/".length())){
-            System.out.println("uri:" + uri);
 
             response = parseAddMentorMenu(httpExchange);
 
             if (method.equals("POST")){
                 response = saveAddedMentorAndGoBackToMenu(httpExchange);
+            }
+        }
+        else if (uri.startsWith("addgroup", "/adminhome/".length())){
+            response = parseAddGroupMentorMenu(httpExchange);
+
+            if (method.equals("POST")){
+                response = saveAddedGroup(httpExchange);
             }
         }
 
@@ -64,6 +72,44 @@ public class AdminHandler implements HttpHandler {
             JtwigModel model = JtwigModel.newModel();
 
             response = template.render(model);
+        }
+        return response;
+    }
+
+    public String parseAddGroupMentorMenu(HttpExchange httpExchange) throws IOException{
+
+        String method = httpExchange.getRequestMethod();
+        String response = "";
+
+        if (method.equals("GET")) {
+
+            JtwigTemplate template = JtwigTemplate.classpathTemplate("templates/add_group.twig");
+            JtwigModel model = JtwigModel.newModel()/*.with("fiels", fieldCollection) podobnie jak index*/;
+
+            response = template.render(model);
+        }
+        return response;
+    }
+
+    public String saveAddedGroup(HttpExchange httpExchange) throws IOException{
+
+        String response = "";
+
+        /* read form data*/
+        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        String formData = br.readLine();
+
+        /* parse key=value&another_key=another_value and escaped unicode codepoints into usable form */
+        Map<String, String> inputData = parseFormData(formData);
+        Group newGroup = new Group(inputData.get("name"));
+
+        try {
+            adminController.getGroupDao().addGroupToDatabase(newGroup);
+            adminController.getGroupDao().addGroup(newGroup);
+        }
+        catch (SQLException e){
+            e.printStackTrace();
         }
         return response;
     }
