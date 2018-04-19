@@ -86,18 +86,6 @@ ul li a {
 
 /* Custom style */
 
-input[type=text].new-name {
-    color: rgba(0,0,0,0.5);
-}
-
-input[type=text].new-surname {
-    color: rgba(0,0,0,0.5);
-}
-
-input[type=password].new-password {
-    color: rgba(0,0,0,0.5);
-}
-
 input[type=text], .login, .password, .new-name, .new-surname, .new-password {
     font-family: 'Press Start 2P', cursive;
     font-size: 50px;
@@ -155,21 +143,6 @@ p {
     /*background-image: url(../img/password_2.png);*/
     /*background-position: center;*/
 /*}*/
-
-.new-name {
-    background-image: url(../img/name.png);
-    background-position: center;
-}
-
-.new-surname {
-    background-image: url(../img/surname.png);
-    background-position: center;
-}
-
-.new-password {
-    background-image: url(../img/password_button.png);
-    background-position: center;
-}
 
 .submit-login {
     cursor: url("../img/keybord.png"), auto;
@@ -252,18 +225,6 @@ form, .menu {
 
 .button:hover {
     background: darkgoldenrod;
-}
-
-.new-name:hover {
-    background-image: none;
-}
-
-.new-surname:hover {
-    background-image: none;
-}
-
-.new-password:hover {
-    background-image: none;
 }
 
 a:hover {
