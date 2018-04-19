@@ -11,7 +11,7 @@
 
     <link rel="manifest" href="site.webmanifest">
     <link rel="apple-touch-icon" href="/assets/img/icon.png">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/templates/favicon.ico" type="image/x-icon">
 
     <link rel="stylesheet" href="/assets/css/normalize.css">
     <link rel="stylesheet" href="/assets/css/main.css">
@@ -28,18 +28,17 @@
     <div>
         <a class="exit" href="adminhome/"><img src="/assets/img/exit.png"></a>
     </div>
-    <div class="headermain">
-        <a href="index.html"><img src="/assets/img/header_main.png" alt="Codecool system"></a>
+    <div class="header-main">
+        <img src="/assets/img/header_main.png" alt="Codecool system">
     </div>
 </header>
-<body>
 <table>
     {% for mentor in mentors %}
         {{ mentor }}
     {% endfor %}
 </table>
 <div>
-    <form class="choose-mentor-form" method="POST">
+    <form class="choose-form" method="POST">
         <input class="new-group" type="text" name="name" placeholder="Mentor id:"><br>
         <input class="submit-login" href="adminhome/assignmentor/addgroup" type="image" value="PLAY" src="/assets/img/submit.png" onclick="play()">
     </form>
@@ -69,6 +68,5 @@
     ga('create','UA-XXXXX-Y','auto');ga('send','pageview')
 </script>
 <script src="https://www.google-analytics.com/analytics.js" async defer></script>
-</body>
 </body>
 </html>
